@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generar QR - Stockeando</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: var(--radius-2xl);
+            box-shadow: var(--shadow-xl);
+            overflow: hidden;
+            animation: slideIn 0.6s ease-out;
+        }
+        .main-header {
+            background: linear-gradient(135deg, #1f2937 0%, #374151 100%);
+            box-shadow: 0 2px 10px rgba(31, 41, 55, 0.3);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .main-nav {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 12px 20px;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .nav-link {
+            color: rgba(255, 255, 255, 0.9);
+            text-decoration: none;
+            padding: 10px 20px;
+            border-radius: 25px;
+            font-weight: 500;
+            font-size: 0.95em;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+        }
+        .nav-link:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+        .nav-link.active {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            font-weight: 600;
+        }
+        .nav-logo {
+            font-weight: 700;
+            font-size: 1.1em;
+        }
+        .main-footer {
+            background: #f8f9fa;
+            padding: 20px;
+            text-align: center;
+            border-top: 1px solid #e0e0e0;
+        }
+        .footer-link {
+            color: #666;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+        .footer-link:hover {
+            color: var(--secondary-700);
+        }
+        .header {
+            background: linear-gradient(135deg, #374151, #4b5563);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+        .header p {
+            opacity: 0.9;
+            font-size: 1.1em;
+        }
+        .content {
+            padding: 40px;
+        }
+        .form-section {
+            margin-bottom: 40px;
+        }
+        .form-group {
+            margin-bottom: 25px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+            font-size: 1.1em;
+        }
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: border-color 0.3s ease;
+        }
+        .form-group input:focus, .form-group select:focus {
+            outline: none;
+            border-color: #388e3c;
+            box-shadow: 0 0 0 3px rgba(56, 142, 60, 0.1);
+        }
+        .btn {
+            background: linear-gradient(135deg, var(--secondary-600), var(--secondary-700));
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+            background: linear-gradient(135deg, var(--secondary-700), var(--secondary-800));
+        }
+        .qr-section {
+            text-align: center;
+            padding: 30px;
+            background: #f8f9fa;
+            border-radius: 15px;
+            margin-top: 30px;
+            display: none;
+        }
+        .qr-section.show {
+            display: block;
+        }
+        .qr-code {
+            margin: 20px 0;
+        }
+        .product-info {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            text-align: left;
+        }
+        .product-info h3 {
+            color: #388e3c;
+            margin-bottom: 15px;
+        }
+        .product-info p {
+            margin: 8px 0;
+            color: #666;
+        }
+        .back-btn {
+            background: #6c757d;
+            margin-bottom: 20px;
+            width: auto;
+            display: inline-block;
+            text-decoration: none;
+            text-align: center;
+            padding: 10px 20px;
+        }
+        .back-btn:hover {
+            background: #5a6268;
+        }
+        @media (max-width: 768px) {
+            .container {
+                margin: 10px;
+            }
+            .content {
+                padding: 25px;
+            }
+            .header {
+                padding: 25px;
+            }
+            .header h1 {
+                font-size: 2em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🏭 Generar QR</h1>
+            <p>Crea códigos QR para materias primas</p>
+        </div>
+        
+        <header class="main-header">
+            <nav class="main-nav">
+                <a href="stockeando.html" class="nav-link nav-logo">Stockeando</a>
+                <a href="productos.html" class="nav-link">Productos</a>
+                <a href="inventario.html" class="nav-link">Inventario</a>
+                <a href="movimientos.html" class="nav-link">Movimientos</a>
+
+                <a href="reportes.html" class="nav-link">Reportes</a>
+                <a href="inventario.html#eliminados" class="nav-link">Eliminados/Rechazados</a>
+            </nav>
+        </header>
+        
+        <div class="content">
+            
+            <div class="form-section">
+                <form id="productForm">
+                    <div class="form-group">
+                        <label for="producto">Materia Prima:</label>
+                        <select id="producto" name="producto" required>
+                            <option value="">Selecciona una materia prima</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="peso">Peso (kg):</label>
+                        <input type="number" id="peso" name="peso" required placeholder="Peso en kg" step="0.1">
+                        <span id="medidaDisplay" style="margin-left: 10px; color: #666;"></span>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="lote">Lote:</label>
+                        <input type="text" id="lote" name="lote" required placeholder="Número de lote">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="ingreso">Fecha de Ingreso:</label>
+                        <input type="date" id="ingreso" name="ingreso" required>
+                    </div>
+                    
+                    <button type="submit" class="btn">Generar Código QR</button>
+                </form>
+            </div>
+            
+            <div id="qrSection" class="qr-section">
+                <h3>Código QR Generado</h3>
+                <div class="product-info" id="productInfo">
+                    <h3>Información de la Materia Prima</h3>
+                    <p><strong>Producto:</strong> <span id="displayProducto">-</span></p>
+                    <p><strong>Peso:</strong> <span id="displayPeso">-</span></p>
+                    <p><strong>Lote:</strong> <span id="displayLote">-</span></p>
+                    <p><strong>Código Interno:</strong> <span id="displayCodigo">-</span></p>
+                    <p><strong>Fecha de Ingreso:</strong> <span id="displayFecha">-</span></p>
+                </div>
+                <div class="qr-code" id="qrCode">
+                    <!-- El QR se generará aquí -->
+                </div>
+                <button onclick="downloadQR()" class="btn" id="downloadBtn" style="display: none;">Descargar QR</button>
+            </div>
+        </div>
+        
+        <footer class="main-footer">
+            <a href="../index.html" class="footer-link">
+                🏠 Volver a Utilidades Principal
+            </a>
+        </footer>
+    </div>
+
+    <script src="auth.js"></script>
+    <script>
+        // Cargar productos del localStorage
+        function loadProducts() {
+            return JSON.parse(localStorage.getItem('stockeando_products')) || [];
+        }
+
+        // Cargar productos en el select
+        function loadProductSelect() {
+            const products = loadProducts();
+            const select = document.getElementById('producto');
+            
+            products.forEach(product => {
+                const option = document.createElement('option');
+                option.value = product.name;
+                option.textContent = `${product.name} (${product.measure})`;
+                option.dataset.measure = product.measure;
+                select.appendChild(option);
+            });
+        }
+
+        // Establecer fecha actual por defecto y cargar productos
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('ingreso').valueAsDate = new Date();
+            loadProductSelect();
+            
+            // Mostrar medida cuando se selecciona un producto
+            document.getElementById('producto').addEventListener('change', updatePreview);
+            document.getElementById('peso').addEventListener('input', updatePreview);
+            document.getElementById('lote').addEventListener('input', updatePreview);
+            document.getElementById('ingreso').addEventListener('change', updatePreview);
+            
+            document.getElementById('producto').addEventListener('change', function() {
+                const selectedOption = this.options[this.selectedIndex];
+                const medidaDisplay = document.getElementById('medidaDisplay');
+                if (selectedOption.dataset.measure) {
+                    medidaDisplay.textContent = `Medida estándar: ${selectedOption.dataset.measure}`;
+                } else {
+                    medidaDisplay.textContent = '';
+                }
+            });
+        });
+        
+        document.getElementById('productForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const producto = document.getElementById('producto').value;
+            const peso = document.getElementById('peso').value;
+            const lote = document.getElementById('lote').value;
+            const ingreso = document.getElementById('ingreso').value;
+            
+            // Generar código interno único
+            const codigoInterno = generateInternalCode(producto, lote);
+            
+            // Crear el texto para el QR con toda la información
+            const qrData = `Producto: ${producto}\nPeso: ${peso}kg\nLote: ${lote}\nCódigo: ${codigoInterno}\nFecha: ${ingreso}`;
+            
+            // Actualizar información del producto
+            document.getElementById('displayProducto').textContent = producto;
+            document.getElementById('displayPeso').textContent = peso + ' kg';
+            document.getElementById('displayLote').textContent = lote;
+            document.getElementById('displayCodigo').textContent = codigoInterno;
+            document.getElementById('displayFecha').textContent = new Date(ingreso).toLocaleDateString('es-ES');
+            
+            // Generar QR usando una implementación simple
+            generateQR(qrData, producto, codigoInterno);
+        });
+        
+        // Actualizar vista previa en tiempo real
+        function updatePreview() {
+            const producto = document.getElementById('producto').value;
+            const peso = document.getElementById('peso').value;
+            const lote = document.getElementById('lote').value;
+            const ingreso = document.getElementById('ingreso').value;
+            
+            document.getElementById('displayProducto').textContent = producto || '-';
+            document.getElementById('displayPeso').textContent = peso ? peso + ' kg' : '-';
+            document.getElementById('displayLote').textContent = lote || '-';
+            document.getElementById('displayFecha').textContent = ingreso ? new Date(ingreso).toLocaleDateString('es-ES') : '-';
+            
+            // Solo generar código si todos los campos están completos
+            if (producto && lote) {
+                const codigoInterno = generateInternalCode(producto, lote);
+                document.getElementById('displayCodigo').textContent = codigoInterno;
+            } else {
+                document.getElementById('displayCodigo').textContent = '-';
+            }
+        }
+        
+        // Generar código interno único
+        function generateInternalCode(productName, lote) {
+            const prefix = productName.substring(0, 3).toUpperCase();
+            const today = new Date();
+            const dateStr = `${today.getDate().toString().padStart(2, '0')}${(today.getMonth() + 1).toString().padStart(2, '0')}${today.getFullYear().toString().slice(-2)}`;
+            const loteShort = lote.substring(0, 3).toUpperCase();
+            const random = Math.floor(Math.random() * 1000).toString().padStart(3, '0');
+            
+            return `${prefix}-${dateStr}-${loteShort}-${random}`;
+        }
+        
+        function generateQR(text, productName, codigoInterno) {
+            const qrCodeDiv = document.getElementById('qrCode');
+            qrCodeDiv.innerHTML = '';
+            
+            const qrSize = 300;
+            const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=${qrSize}x${qrSize}&data=${encodeURIComponent(text)}`;
+            
+            const img = document.createElement('img');
+            img.src = qrUrl;
+            img.style.border = '2px solid #ddd';
+            img.style.borderRadius = '10px';
+            img.style.maxWidth = '100%';
+            img.alt = 'Código QR';
+            
+            img.onload = function() {
+                qrCodeDiv.appendChild(img);
+                
+                const textLabel = document.createElement('div');
+                textLabel.style.marginTop = '15px';
+                textLabel.style.fontSize = '16px';
+                textLabel.style.fontWeight = 'bold';
+                textLabel.style.color = '#333';
+                textLabel.innerHTML = `${productName}<br><small style="font-size: 12px; color: #666;">${codigoInterno}</small>`;
+                qrCodeDiv.appendChild(textLabel);
+                
+                document.getElementById('downloadBtn').style.display = 'block';
+                document.getElementById('qrSection').classList.add('show');
+                document.getElementById('qrSection').scrollIntoView({ behavior: 'smooth' });
+            };
+            
+            img.onerror = function() {
+                qrCodeDiv.innerHTML = '<p style="color: red;">Error al generar el código QR</p>';
+            };
+        }
+        
+        function downloadQR() {
+            const img = document.querySelector('#qrCode img');
+            const productName = document.getElementById('producto').value;
+            const peso = document.getElementById('peso').value;
+            const lote = document.getElementById('lote').value;
+            const codigoInterno = generateInternalCode(productName, lote);
+            
+            if (img) {
+                const canvas = document.createElement('canvas');
+                const ctx = canvas.getContext('2d');
+                
+                canvas.width = 350;
+                canvas.height = 420;
+                ctx.fillStyle = 'white';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                
+                const tempImg = new Image();
+                tempImg.crossOrigin = 'anonymous';
+                tempImg.onload = function() {
+                    ctx.drawImage(tempImg, 25, 25, 300, 300);
+                    
+                    // Producto
+                    ctx.fillStyle = '#333';
+                    ctx.font = 'bold 16px Arial';
+                    ctx.textAlign = 'center';
+                    ctx.fillText(productName, canvas.width / 2, 350);
+                    
+                    // Peso y Lote
+                    ctx.font = '12px Arial';
+                    ctx.fillText(`Peso: ${peso}kg | Lote: ${lote}`, canvas.width / 2, 370);
+                    
+                    // Código interno
+                    ctx.font = 'bold 12px Arial';
+                    ctx.fillText(codigoInterno, canvas.width / 2, 390);
+                    
+                    // Fecha
+                    const fecha = new Date(document.getElementById('ingreso').value).toLocaleDateString('es-ES');
+                    ctx.font = '10px Arial';
+                    ctx.fillText(fecha, canvas.width / 2, 410);
+                    
+                    const link = document.createElement('a');
+                    link.download = `QR_${codigoInterno}.png`;
+                    link.href = canvas.toDataURL();
+                    link.click();
+                };
+                tempImg.src = img.src;
+            }
+        }
+    </script>
+</body>
+</html>

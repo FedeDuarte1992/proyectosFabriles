@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Utilidades</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+            animation: fadeIn 0.8s ease-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            backdrop-filter: blur(10px);
+        }
+        h1 {
+            text-align: center;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-size: 3em;
+            font-weight: 700;
+            margin-bottom: 15px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .subtitle {
+            text-align: center;
+            color: #666;
+            font-size: 1.2em;
+            margin-bottom: 40px;
+            opacity: 0.8;
+        }
+        .utilities-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+        .utility-card {
+            background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+            border: none;
+            border-radius: 15px;
+            padding: 30px;
+            text-decoration: none;
+            color: #333;
+            transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+            position: relative;
+            overflow: hidden;
+        }
+        .utility-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+            transition: left 0.5s;
+        }
+        .utility-card:hover::before {
+            left: 100%;
+        }
+        .utility-card:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+        }
+        .utility-icon {
+            width: 60px;
+            height: 60px;
+            margin: 0 auto 20px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            color: white;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+        .utility-title {
+            font-size: 22px;
+            font-weight: 700;
+            margin-bottom: 12px;
+            text-align: center;
+            color: #333;
+        }
+        .utility-description {
+            font-size: 15px;
+            color: #666;
+            text-align: center;
+            line-height: 1.6;
+        }
+        .utility-card[data-type="sueldo"] .utility-icon {
+            background: linear-gradient(135deg, #1976d2, #42a5f5);
+            box-shadow: 0 4px 15px rgba(25, 118, 210, 0.3);
+        }
+        .utility-card[data-type="stock"] .utility-icon {
+            background: linear-gradient(135deg, #388e3c, #66bb6a);
+            box-shadow: 0 4px 15px rgba(56, 142, 60, 0.3);
+        }
+        .utility-card[data-type="doc"] .utility-icon {
+            background: linear-gradient(135deg, #f57c00, #ff9800);
+            box-shadow: 0 4px 15px rgba(245, 124, 0, 0.3);
+        }
+        @media (max-width: 768px) {
+            .container {
+                padding: 25px;
+                margin: 10px;
+            }
+            h1 {
+                font-size: 2.2em;
+            }
+            .utilities-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            .utility-card {
+                padding: 25px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🛠️ Utilidades</h1>
+        <p class="subtitle">Herramientas para optimizar tu trabajo diario</p>
+        <div class="utilities-grid" id="utilitiesGrid">
+            <!-- Las utilidades se cargarán dinámicamente -->
+        </div>
+    </div>
+
+    <script>
+        // Configuración de las utilidades disponibles
+        const utilities = [
+            {
+                name: "Calcular sueldo",
+                folder: "Calcular sueldo",
+                description: "Herramientas para calcular sueldos y gestionar asistencia",
+                indexFile: "index.html"
+            },
+            {
+                name: "Stockeando",
+                folder: "Stockeando",
+                description: "Sistema de gestión de inventario y control de stock",
+                indexFile: "stockeando.html"
+            },
+            {
+                name: "Documentación PDF",
+                folder: "Stockeando",
+                description: "Generador de documentación técnica completa",
+                indexFile: "generate-documentation.html"
+            }
+            // Agregar más utilidades aquí cuando se creen nuevas carpetas
+        ];
+
+        // Función para cargar las utilidades
+        function loadUtilities() {
+            const grid = document.getElementById('utilitiesGrid');
+            
+            utilities.forEach(utility => {
+                const card = document.createElement('a');
+                card.className = 'utility-card';
+                card.href = `${utility.folder}/${utility.indexFile}`;
+                
+                // Agregar tipo para estilos específicos
+                const type = utility.name.toLowerCase().includes('sueldo') ? 'sueldo' : 
+                           utility.name.toLowerCase().includes('documentación') ? 'doc' : 'stock';
+                card.setAttribute('data-type', type);
+                
+                // Iconos específicos
+                const icons = {
+                    sueldo: '💰',
+                    stock: '📦',
+                    doc: '📄'
+                };
+                
+                card.innerHTML = `
+                    <div class="utility-icon">${icons[type]}</div>
+                    <div class="utility-title">${utility.name}</div>
+                    <div class="utility-description">${utility.description}</div>
+                `;
+                
+                grid.appendChild(card);
+            });
+        }
+
+        // Cargar utilidades al cargar la página
+        document.addEventListener('DOMContentLoaded', loadUtilities);
+    </script>
+</body>
+</html>

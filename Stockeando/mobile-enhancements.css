@@ -1,0 +1,310 @@
+/* Mejoras para Experiencia Móvil - Stockeando */
+
+/* Gestos táctiles mejorados */
+@media (max-width: 768px) {
+    /* Aumentar área táctil de botones */
+    .btn, .btn-modern, .request-btn, .add-btn, .enter-btn, .delete-btn {
+        min-height: 44px;
+        min-width: 44px;
+        padding: var(--space-3) var(--space-4);
+    }
+
+    /* Mejorar navegación móvil */
+    .main-nav {
+        padding: var(--space-2) var(--space-3);
+        gap: var(--space-1);
+        overflow-x: auto;
+        scrollbar-width: none;
+        -ms-overflow-style: none;
+    }
+
+    .main-nav::-webkit-scrollbar {
+        display: none;
+    }
+
+    .nav-link {
+        padding: var(--space-2) var(--space-3);
+        font-size: var(--text-sm);
+        white-space: nowrap;
+        flex-shrink: 0;
+    }
+
+    /* Cards más grandes para móvil */
+    .section-card, .plant-card {
+        min-height: 100px;
+        padding: var(--space-4);
+    }
+
+    .category-card {
+        min-height: 80px;
+        padding: var(--space-3);
+    }
+
+    /* Mejorar drag & drop en móvil */
+    .product-item-card[draggable="true"] {
+        touch-action: none;
+        user-select: none;
+    }
+
+    /* Modales más amigables en móvil */
+    .modal-content {
+        margin: 5% auto;
+        width: 95%;
+        max-width: none;
+        border-radius: var(--radius-xl);
+    }
+
+    /* Inputs más grandes */
+    .input, .input-modern, .modal-input {
+        min-height: 44px;
+        font-size: 16px; /* Previene zoom en iOS */
+    }
+
+    /* Grids responsivos */
+    .features-grid {
+        grid-template-columns: 1fr;
+        gap: var(--space-4);
+    }
+
+    .categories-grid {
+        grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+        gap: var(--space-3);
+    }
+
+    .products-grid {
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        gap: var(--space-3);
+    }
+
+    /* Mejorar tablas en móvil */
+    .products-table {
+        font-size: var(--text-sm);
+        overflow-x: auto;
+        display: block;
+        white-space: nowrap;
+    }
+
+    .products-table thead,
+    .products-table tbody,
+    .products-table th,
+    .products-table td,
+    .products-table tr {
+        display: block;
+    }
+
+    .products-table thead tr {
+        position: absolute;
+        top: -9999px;
+        left: -9999px;
+    }
+
+    .products-table tr {
+        border: 1px solid var(--secondary-200);
+        border-radius: var(--radius-lg);
+        margin-bottom: var(--space-3);
+        padding: var(--space-3);
+        background: white;
+    }
+
+    .products-table td {
+        border: none;
+        position: relative;
+        padding-left: 30%;
+        padding-bottom: var(--space-2);
+        white-space: normal;
+    }
+
+    .products-table td:before {
+        content: attr(data-label) ": ";
+        position: absolute;
+        left: 6px;
+        width: 25%;
+        padding-right: var(--space-2);
+        white-space: nowrap;
+        font-weight: 600;
+        color: var(--secondary-700);
+    }
+
+    /* Dashboard stats móvil */
+    #dashboard-stats {
+        position: fixed !important;
+        bottom: 10px !important;
+        left: 10px !important;
+        right: 10px !important;
+        width: auto !important;
+        min-width: auto !important;
+    }
+
+    /* Notificaciones móviles */
+    .notification {
+        position: fixed !important;
+        top: 10px !important;
+        left: 10px !important;
+        right: 10px !important;
+        width: auto !important;
+        max-width: none !important;
+    }
+
+    /* Mejorar formularios */
+    .form-group {
+        flex-direction: column;
+        gap: var(--space-3);
+    }
+
+    .form-group input,
+    .form-group select {
+        width: 100%;
+    }
+
+    /* Contenedores principales */
+    .container {
+        margin: var(--space-2);
+        border-radius: var(--radius-xl);
+    }
+
+    .content {
+        padding: var(--space-4);
+    }
+
+    /* Mejorar layout de plantas */
+    .main-layout {
+        grid-template-columns: 1fr;
+        gap: var(--space-4);
+    }
+
+    .plants-grid {
+        grid-template-columns: 1fr;
+        gap: var(--space-4);
+    }
+
+    .plant2-layout {
+        grid-template-columns: 1fr;
+        gap: var(--space-4);
+    }
+
+    .machines-section {
+        grid-template-columns: 1fr;
+        gap: var(--space-4);
+    }
+
+    /* Mejorar QR preview */
+    #qrPreview img {
+        max-width: 150px;
+        height: auto;
+    }
+
+    /* Scroll suave en contenedores */
+    .materials-list,
+    .machine-materials,
+    .rejected-materials {
+        max-height: 200px;
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+}
+
+/* Mejoras para pantallas muy pequeñas */
+@media (max-width: 480px) {
+    .main-title {
+        font-size: var(--text-2xl);
+    }
+
+    .header h1 {
+        font-size: var(--text-xl);
+    }
+
+    .section-icon,
+    .plant-icon {
+        font-size: 1.5em;
+    }
+
+    .category-icon {
+        font-size: 1.2em;
+    }
+
+    .btn, .btn-modern {
+        padding: var(--space-2) var(--space-3);
+        font-size: var(--text-xs);
+    }
+}
+
+/* Mejoras para modo landscape en móviles */
+@media (max-width: 768px) and (orientation: landscape) {
+    .header {
+        padding: var(--space-4);
+    }
+
+    .header h1 {
+        font-size: var(--text-xl);
+        margin-bottom: var(--space-2);
+    }
+
+    .plants-grid {
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    }
+
+    .main-layout {
+        grid-template-columns: 300px 1fr;
+    }
+}
+
+/* Animaciones optimizadas para móvil */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+/* Mejoras de accesibilidad */
+@media (prefers-contrast: high) {
+    :root {
+        --primary-500: #0066cc;
+        --secondary-200: #666666;
+        --success-500: #006600;
+        --warning-500: #cc6600;
+        --error-500: #cc0000;
+    }
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+    :root {
+        --secondary-50: #1e293b;
+        --secondary-100: #334155;
+        --secondary-200: #475569;
+        --secondary-800: #f1f5f9;
+        --secondary-900: #f8fafc;
+    }
+
+    body {
+        background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+        color: var(--secondary-900);
+    }
+
+    .card-modern,
+    .feature-card,
+    .category-card,
+    .product-item-card {
+        background: var(--secondary-100);
+        color: var(--secondary-900);
+        border-color: var(--secondary-200);
+    }
+}
+
+/* Mejoras para dispositivos con hover limitado */
+@media (hover: none) {
+    .card-modern:hover,
+    .feature-card:hover,
+    .category-card:hover,
+    .plant-card:hover,
+    .section-card:hover {
+        transform: none;
+    }
+
+    .btn:hover,
+    .btn-modern:hover {
+        transform: none;
+    }
+}

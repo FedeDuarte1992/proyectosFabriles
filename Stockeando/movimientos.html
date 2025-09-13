@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Movimientos - Stockeando</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="modern-theme.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: var(--font-family-base);
+            background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%);
+            min-height: 100vh;
+            padding: var(--space-5);
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: var(--radius-2xl);
+            box-shadow: var(--shadow-xl);
+            overflow: hidden;
+        }
+        .main-header {
+            background: linear-gradient(135deg, #1f2937 0%, #374151 100%);
+            box-shadow: 0 2px 10px rgba(31, 41, 55, 0.3);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .main-nav {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 12px 20px;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .nav-link {
+            color: rgba(255, 255, 255, 0.9);
+            text-decoration: none;
+            padding: 10px 20px;
+            border-radius: 25px;
+            font-weight: 500;
+            font-size: 0.95em;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+        }
+        .nav-link:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+        .nav-link.active {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            font-weight: 600;
+        }
+        .nav-logo {
+            font-weight: 700;
+            font-size: 1.1em;
+        }
+        .header {
+            background: linear-gradient(135deg, #374151, #4b5563);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+        .movements-container {
+            padding: 40px;
+        }
+        .date-group {
+            margin-bottom: 30px;
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            box-shadow: var(--shadow-md);
+        }
+        .date-header {
+            background: linear-gradient(135deg, var(--secondary-600), var(--secondary-700));
+            color: white;
+            padding: 15px 20px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        .date-header:hover {
+            background: linear-gradient(135deg, var(--secondary-700), var(--secondary-800));
+        }
+        .date-toggle {
+            transition: transform 0.3s ease;
+            font-size: 1.2em;
+        }
+        .date-toggle.collapsed {
+            transform: rotate(-90deg);
+        }
+        .date-movements {
+            background: white;
+            max-height: 1000px;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+        .date-movements.collapsed {
+            max-height: 0;
+        }
+        .movement-card {
+            padding: 15px 20px;
+            border-bottom: 1px solid #f0f0f0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .movement-card:hover {
+            background: #f8f9fa;
+            transform: translateX(5px);
+        }
+        .movement-card:last-child {
+            border-bottom: none;
+        }
+        .movement-product {
+            font-weight: 500;
+            color: #333;
+            font-size: 0.95em;
+        }
+        .movement-timestamp {
+            color: #666;
+            font-size: 0.85em;
+            font-weight: 500;
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+        }
+        .modal-content {
+            background-color: white;
+            margin: 5% auto;
+            padding: var(--space-6);
+            border-radius: var(--radius-xl);
+            width: 90%;
+            max-width: 500px;
+            box-shadow: var(--shadow-xl);
+        }
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .close:hover {
+            color: black;
+        }
+        .detail-item {
+            margin-bottom: var(--space-3);
+            font-size: var(--text-base);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="main-header">
+            <nav class="main-nav">
+                <a href="stockeando.html" class="nav-link nav-logo">Stockeando</a>
+                <a href="productos.html" class="nav-link">Productos</a>
+                <a href="inventario.html" class="nav-link">Inventario</a>
+                <a href="movimientos.html" class="nav-link active">Movimientos</a>
+
+                <a href="reportes.html" class="nav-link">Reportes</a>
+                <a href="inventario.html#eliminados" class="nav-link">Eliminados/Rechazados</a>
+            </nav>
+        </header>
+
+        <div class="header">
+            <h1>📋 Registro de Movimientos</h1>
+            <p>Historial completo de movimientos de productos</p>
+        </div>
+
+        <div class="movements-container">
+            <div id="movementsList">
+                <!-- Los movimientos se cargarán aquí -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal para detalles del producto -->
+    <div id="productModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <div id="modalContent"></div>
+        </div>
+    </div>
+
+    <script src="auth.js"></script>
+    <script src="product-state-manager.js"></script>
+    <script>
+        function showProductDetails(movement) {
+            const modal = document.getElementById('productModal');
+            const modalContent = document.getElementById('modalContent');
+            
+            const product = movement.productData || {};
+            const location = movement.to === 'rejected' ? 'Rechazado' : movement.to;
+            
+            modalContent.innerHTML = `
+                <h2>Detalles del Material - ${location}</h2>
+                <div class="detail-item">Producto: ${product.name || movement.productId || 'N/A'}</div>
+                <div class="detail-item">Peso: ${product.weight || 'N/A'}</div>
+                <div class="detail-item">Lote: ${product.lot || 'N/A'}</div>
+                <div class="detail-item">Código: ${product.code || 'N/A'}</div>
+                <div class="detail-item">Desde: ${movement.from}</div>
+                <div class="detail-item">Hasta: ${movement.to}</div>
+                <div class="detail-item">Usuario: ${movement.user || 'N/A'}</div>
+                <div class="detail-item">Fecha: ${new Date(movement.timestamp).toLocaleString()}</div>
+            `;
+            
+            modal.style.display = 'block';
+        }
+
+        function formatMovementDescription(movement) {
+            const product = movement.productData || {};
+            const productName = product.name || movement.productId || 'Producto';
+            const date = new Date(movement.timestamp).toLocaleDateString();
+            const time = new Date(movement.timestamp).toLocaleTimeString();
+            
+            let description = '';
+            
+            // Determinar el tipo de movimiento y crear descripción
+            if (movement.to === 'rejected') {
+                const plantNumber = movement.from.includes('plant1') ? '1' : 
+                                  movement.from.includes('plant2') ? '2' : 
+                                  movement.from.includes('plant3') ? '3' : '';
+                description = `${productName} ingresó a planta ${plantNumber}, rechazado por: ${movement.reason || 'No especificado'}`;
+            } else if (movement.from.includes('transito') && movement.to.includes('deposito')) {
+                description = `${productName} llegó al depósito desde tránsito`;
+            } else if (movement.from.includes('deposito') && movement.to.includes('planta')) {
+                const plantNumber = movement.to.includes('planta1') ? '1' : 
+                                  movement.to.includes('planta2') ? '2' : 
+                                  movement.to.includes('planta3') ? '3' : '';
+                description = `${productName} enviado a planta ${plantNumber}`;
+            } else if (movement.from.includes('planta') && movement.to.includes('Machine')) {
+                const plantNumber = movement.from.includes('planta1') ? '1' : 
+                                  movement.from.includes('planta2') ? '2' : 
+                                  movement.from.includes('planta3') ? '3' : '';
+                const machineId = movement.to.includes('MachineA') ? 'A' : 'B';
+                description = `${productName} enviado a máquina ${machineId} de planta ${plantNumber}`;
+            } else {
+                description = `${productName} movido de ${movement.from} a ${movement.to}`;
+            }
+            
+            return { description, date, time };
+        }
+
+        function toggleDateGroup(dateKey) {
+            const dateMovements = document.getElementById(`date-${dateKey}`);
+            const toggle = document.getElementById(`toggle-${dateKey}`);
+            
+            if (dateMovements.classList.contains('collapsed')) {
+                dateMovements.classList.remove('collapsed');
+                toggle.classList.remove('collapsed');
+            } else {
+                dateMovements.classList.add('collapsed');
+                toggle.classList.add('collapsed');
+            }
+        }
+
+        function loadMovements() {
+            console.log('Cargando movimientos...');
+            const movements = productStateManager.getAllMovements();
+            console.log('Movimientos encontrados:', movements.length);
+            
+            const movementsList = document.getElementById('movementsList');
+            
+            if (movements.length === 0) {
+                movementsList.innerHTML = '<div>No hay movimientos registrados</div>';
+                return;
+            }
+            
+            // Agrupar movimientos por fecha
+            const groupedMovements = {};
+            movements.forEach(movement => {
+                const date = new Date(movement.timestamp).toLocaleDateString();
+                if (!groupedMovements[date]) {
+                    groupedMovements[date] = [];
+                }
+                groupedMovements[date].push(movement);
+            });
+            
+            // Ordenar fechas (más recientes primero)
+            const sortedDates = Object.keys(groupedMovements).sort((a, b) => new Date(b) - new Date(a));
+            
+            movementsList.innerHTML = sortedDates.map(date => {
+                const dateKey = date.replace(/\//g, '-');
+                const movementsForDate = groupedMovements[date];
+                const count = movementsForDate.length;
+                
+                return `
+                    <div class="date-group">
+                        <div class="date-header" onclick="toggleDateGroup('${dateKey}')">
+                            <span>${date} (${count} movimientos)</span>
+                            <span class="date-toggle" id="toggle-${dateKey}">▼</span>
+                        </div>
+                        <div class="date-movements" id="date-${dateKey}">
+                            ${movementsForDate.reverse().map(movement => {
+                                const { description, date, time } = formatMovementDescription(movement);
+                                
+                                return `
+                                    <div class="movement-card" ondblclick="showProductDetails(${JSON.stringify(movement).replace(/"/g, '&quot;')})">
+                                        <div>
+                                            <div class="movement-product">${description}</div>
+                                            <div style="font-size: 0.8em; color: #888; margin-top: 4px;">Usuario: ${movement.user || 'N/A'}</div>
+                                        </div>
+                                        <div class="movement-timestamp">${time}</div>
+                                    </div>
+                                `;
+                            }).join('')}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Configurar modal
+        document.querySelector('.close').onclick = function() {
+            document.getElementById('productModal').style.display = 'none';
+        }
+
+        window.onclick = function(event) {
+            if (event.target == document.getElementById('productModal')) {
+                document.getElementById('productModal').style.display = 'none';
+            }
+        }
+
+        // Cargar movimientos al iniciar
+        loadMovements();
+    </script>
+</body>
+</html>
